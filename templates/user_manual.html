@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Manual</title>
+    <!-- Your CSS links here -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style1.css') }}">
+    <style>
+        .page-content {
+            margin: 0 auto;
+            max-width: 1500px; /* Adjust width as needed */
+            padding: 20px;
+            text-align: left; /* Align text to the left within page-content */
+            display: grid;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            grid-template-columns: repeat(1, 1fr);
+        }
+        
+        .page-content ol {
+            margin-top: 10px; /* Add space above the ordered list */
+            margin-bottom: 20px; /* Add space below the ordered list */
+        }
+        .page-content ol li {
+            margin-bottom: 10px; /* Add space between list items */
+        }
+
+        .column {
+            
+            margin-bottom: 20px;
+            display: flex;
+            background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 80rem;
+            margin-right: 5rem;
+            margin-top: 1rem;
+            margin-left: 4rem;
+        }
+
+        .manual-info{ 
+
+            font-size: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Background image from index.html -->
+    <div class="background">
+        <h1 class="title">User Manual</h1>
+
+        <!-- Links for different information pages -->
+        <div class="navigation">
+            <ul>
+                <li><a href="/baby_info">Baby Information</a></li>
+                <li><a href="/parent_info">Parent Information</a></li>
+                <li><a href="/baby_medical_info">Baby Medical Information</a></li>
+                <li><a href="/user_manual">User Manual</a></li>
+                <li><a href="/">Home Page</a></li>
+            </ul>
+        </div>
+
+        <div class="image-banner">
+            <img src="{{ url_for('static', filename='Dashboard_background.png') }}" alt="My Background" class="BG"/>
+        </div>
+        
+        <!-- Centered content -->
+        <div class="page-content">
+
+
+         <div class="column">
+                 <!-- Baby User Manual Information -->
+            
+            <ol class="manual-info">
+                <li>
+                    <strong>Sound Sensor/Gauge:</strong> The sound sensor/gauge feature in the Baby Watch Smart Crib detects and measures the ambient noise level within the baby's environment. It provides real-time feedback to parents, alerting them to changes in sound levels, such as crying or other disturbances, allowing for timely intervention and care.
+                </li>
+                <li>
+                    <strong>Temperature Sensor/Gauge:</strong> The temperature sensor/gauge function monitors the temperature inside the baby's sleeping area. It ensures optimal comfort and safety by alerting parents to fluctuations in temperature, helping them maintain a suitable environment for their baby's rest and well-being.
+                </li>
+                <li>
+                    <strong>Raspberry Pi Camera (Live View):</strong> The Raspberry Pi camera integration enables parents to view a live feed of their baby directly from the Smart Crib's interface. This feature offers peace of mind and convenience, allowing parents to remotely monitor their baby's activities and well-being from anywhere, at any time.
+                </li>
+                <li>
+                    <strong>White Noise Generator:</strong> The white noise generator in the Baby Watch Smart Crib plays soothing sounds or music to help calm and lull the baby to sleep. With buttons for play, stop, previous, and next, parents can easily select and control the audio playback, creating a comfortable and relaxing environment conducive to restful sleep.
+                </li>
+                <li>
+                    <strong>Light Control (Color Options):</strong> The light control feature allows parents to adjust the color of the crib's ambient lighting, with options including blue, red, and green. Additionally, it includes buttons for turning the light off and restoring it to the default setting. This feature enhances the ambiance of the baby's sleeping space and can be customized to suit individual preferences or soothe the baby during nighttime awakenings.
+                </li>
+            </ol>
+
+            </div>
+
+            
+        </div>
+    </div>
+    <!-- Your additional HTML content here -->
+</body>
+</html>

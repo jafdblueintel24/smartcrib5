@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Camera Feed</title>
+    <!-- Your CSS links here -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style1.css') }}">
+</head>
+<body>
+    
+    <!-- Background image from index.html -->
+    <div class="background">
+        <h1 class="title">Live Camera Feed</h1>
+
+        <!-- Links for different information pages -->
+        <div class="navigation">
+            <ul>
+                <li><a href="/baby_info">Baby Information</a></li>
+                <li><a href="/parent_info">Parent Information</a></li>
+                <li><a href="/baby_medical_info">Baby Medical Information</a></li>
+                <li><a href="/user_manual">User Manual</a></li>
+                <li><a href="/">Home Page</a></li>
+            </ul>
+            
+        </div>
+
+        <div class="image-banner">
+            <img src="{{ url_for('static', filename='Dashboard_background.png') }}" alt="My Background" class="BG"/>
+    
+        </div>
+
+   <!-- Centered image -->
+    <div style="text-align: center;">
+        <img id="stream" src="{{ url_for('video_feed') }}" alt="Camera Stream" style="display: block; margin: 0 auto;">
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LED Control</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        .background {
+        	height: 100%;
+            width: 100%;
+            display: absolute;
+        	overflow: hidden;
+        }
+        .title {
+            text-align: center;
+            margin-top: 50px;
+            color: #5c5c5c;
+            font-size: 40px;
+        }
+
+        .image-banner{
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: absolute;
+            z-index: -2;
+            overflow: hidden;
+        }
+        .BG{
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            object-fit: cover;
+
+        }
+    	.banner {
+        	position: flex;
+        	margin: auto;
+            margin-top: 5rem;
+            margin-left: 70px;
+        	display: grid;
+        	grid-template-columns: repeat(3, 1fr);
+            justify-content: space-between;
+           	 
+        }
+        .progress {
+            width: 200px;
+            height: 20px;
+            margin-top: 15px;
+            border: 1px solid #000;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+        .SG {
+        	background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 20rem;
+            margin-right: 5rem;
+            
+        }
+        .CS {
+            background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 20rem;
+            margin-right: 5rem;
+            margin-top: 2rem;
+        }
+        .LC {
+        	background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 20rem;
+            margin-right: 5rem;
+            margin-top: 2rem;
+        }
+        .bttn{
+            border: 1px solid #e8d89b;
+            background: none;
+            padding: 2px 3.5px;
+            font-size: 15px;
+            font-family: "montserrat";
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.8s;
+            position: relative;
+            overflow: hidden;
+        }
+        .bttnfan {
+            color: black;
+            background-color: #ffe5b4;
+        }
+        .bttnfan:hover {
+            background-color: #8b4000;
+        }
+        .bttncamera {
+            color: black;
+            background-color: #ffe5b4;
+            
+        }
+        .bttncamera:hover {
+            background-color: #8b4000;
+        }
+        .bttnplay {
+            color: black;
+            background-color: #ffe5b4;
+        }
+        .bttnplay:hover {
+            background-color: #8b4000;
+        }
+        .bttnstop {
+            color: black;
+            background-color: #ffe5b4;
+        }
+        .bttnstop:hover {
+            background-color: #8b4000;
+        }
+        .bttnprev {
+            color: black;
+            background-color: #ffe5b4;
+        }
+        .bttnprev:hover {
+            background-color: #8b4000;
+        }
+        .bttnnext {
+            color: black;
+            background-color: #ffe5b4;
+        }
+        .bttnnext:hover {
+            background-color: #8b4000;
+        }
+        .bttnred {
+            color: black;
+            background-color: #ffe5b4;
+            
+        }
+        .bttnred:hover {
+            background-color: #8b0000;
+        }
+        .bttnblue {
+            color: black;
+            background-color: #ffe5b4;
+            
+        }
+        .bttnblue:hover {
+            background-color: rgb(70, 121, 231);
+        }
+        .bttngreen {
+            color: black;
+            background-color: #ffe5b4;
+            
+        }
+        .bttngreen:hover {
+            background-color: #196b12;
+        }
+        .bttndefault {
+            color: black;
+            background-color: #ffe5b4;
+        }
+        .bttndefault:hover {
+            background-color: #cecaca;
+        }
+        .bttnoff {
+            color: black;
+            background-color: #ffe5b4;
+        }
+        .bttnoff:hover {
+            background-color: #8b4000;
+        }
+        .soundSensor {
+        	background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 20rem;
+            margin-right: 5rem;
+        }
+        .cameraButton{
+        	background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 20rem;
+            margin-right: 5rem;
+            margin-top: 2rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0; /* Add some padding to improve spacing */
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for better visibility */
+            z-index: 9999;
+        }
+
+        .navigation ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .navigation ul li {
+            margin-right: 20px; /* Adjust spacing between links */
+        }
+
+        .navigation ul li:last-child {
+            margin-right: 0; /* Remove margin from the last link */
+        }
+
+        .navigation ul li a {
+            text-decoration: none;
+            color: #fff; /* Adjust as needed */
+        }
+
+        #page-content {
+            margin-top: 50px; /* Adjust margin to prevent content from being hidden behind navigation */
+            position: relative; /* Ensure proper positioning */
+            z-index: 1; /* Set a higher z-index value */
+        }
+
+        .fan{
+
+            background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 20rem;
+            margin-right: 5rem;
+        }
+        
+
+        
+
+
+    </style>
+</head>
+<body>
+    <div class="background">
+        <h1 class="title">Baby Watch Smartcrib</h1>
+
+        <!-- Links for different information pages -->
+        <div class="navigation">
+            <ul>
+                <li><a href="/baby_info">Baby Information</a></li>
+                <li><a href="/parent_info">Parent Information</a></li>
+                <li><a href="/baby_medical_info">Baby Medical Information</a></li>
+                <li><a href="/user_manual">User Manual</a></li>
+                <li><a href="/">Home Page</a></li>
+            </ul>
+            
+        </div>
+
+        <div class="image-banner">
+            <img src = "{{url_for('static', filename='Dashboard_background.png')}}" alt="My Background" class="BG"/>
+        </div>
+    <div class="banner">
+    
+        <div class="soundSensor" >
+            <h1>Sound Sensor</h1>
+            <div id="speech"></div>
+        </div>
+    <div class="SG">
+    <h1>Sensor Gauge</h1>
+    <div id="sensorData">
+        <!-- Sensor data will be displayed here -->
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="humidityProgress">0%</div>
+    </div>
+
+    </div>
+
+    
+    <form class="fan" id="toggle-form" action="/toggle" method="post">
+        <h1>Fan Control</h1>
+        <button class="bttn bttnfan" id="toggle-button" type="button">Toggle Fan</button>
+    </form>
+
+    <script>
+        document.getElementById("toggle-button").addEventListener("click", function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/toggle", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log("Toggle successful");
+                    } else {
+                        console.error("Toggle failed");
+                    }
+                }
+            };
+            xhr.send();
+        });
+    </script>
+
+    
+
+    <div class="cameraButton">
+        <h1>Raspberry Pi Camera Stream</h1>
+        <button class="bttn bttncamera" onclick="redirectToCamera()">View Live Camera Feed</button>
+
+
+    </div>
+
+
+    <div class="CS">
+    <h1>White Noise Generator</h1>
+    <p id="current-song">Now Playing: </p>
+    <button class="bttn bttnplay" onclick="playMusic()">Play</button>
+    <button class="bttn bttnstop" onclick="stopMusic()">Stop</button>
+    <button class="bttn bttnprev" onclick="prevMusic()">Previous</button>
+    <button class="bttn bttnnext" onclick="nextMusic()">Next</button>
+    </div>
+
+    <div class="LC" id="lightControl">
+        <h1>Light Control</h1>
+        <button class="bttn bttnred" onclick="sendColor('red')">Red</button>
+        <button class="bttn bttngreen" onclick="sendColor('green')">Green</button>
+        <button class="bttn bttnblue" onclick="sendColor('blue')">Blue</button>
+        <button class="bttn bttndefault" onclick="sendColor('default')">Default</button>
+        <button class="bttn bttnoff" onclick="turnOff()">Off</button>
+    </div>
+    </div>
+    </div>
+    <script>
+
+function playMusic() {
+            sendRequest('play');
+        }
+
+        function stopMusic() {
+            sendRequest('stop');
+        }
+
+        function prevMusic() {
+            sendRequest('prev');
+        }
+
+        function nextMusic() {
+            sendRequest('next');
+        }
+
+        function sendRequest(action) {
+            fetch('/play_music/' + action)
+            .then(response => response.json())
+            .then(data => {
+                // Update the current song name
+                document.getElementById('current-song').textContent = 'Now Playing: ' + data.song_name;
+            });
+        }
+    </script>
+    <script>    
+        $(document).ready(function() {
+            // Periodically fetch sensor data and update the page
+            setInterval(function() {
+                $.getJSON('/sensor_data', function(data) {
+                    $('#sensorData').html(
+                        'Temperature: ' + data.temperature_c + '°C, ' +
+                        'Temperature: ' + data.temperature_f + '°F, ' +
+                        'Humidity: ' + data.humidity + '%'
+                    );
+
+                    // Update the humidity progress bar
+                    $('#humidityProgress').css('width', data.humidity + '%').text(data.humidity + '%');
+                });
+            }, 5000); // Update every 5 seconds
+        });
+    </script>
+
+    <script>
+        function listenForSpeech() {
+            fetch('/listen')
+                .then(response => response.text())
+                .then(data => {
+                   document.getElementById('speech').innerHTML = data;
+                    setTimeout(listenForSpeech, 1000); // Listen again after 1 second
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        listenForSpeech();
+    </script>
+
+    <script>
+        function sendColor(color) {
+            $.getJSON('/control/' + color, function(data) {
+                console.log(data);
+            });
+        }
+
+        function turnOff() {
+            $.getJSON('/control/off', function(data) {
+                console.log(data);
+            });
+        }
+        
+    </script>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        function updateSoundStatus() {
+            $.ajax({
+                url: '/sound_status',
+                type: 'GET',
+                success: function(data) {
+                    $('#soundGauge').text(data);
+                }
+            });
+        }
+
+        setInterval(updateSoundStatus, 1000);
+    });
+</script>
+
+
+<script>
+    function redirectToPicameraUI() {
+        window.location.href = "/picamera_ui";  // Redirect to the route for the Picamera2 UI
+    }
+    </script>
+
+<script>
+    function redirectToCamera() {
+        window.location.href = "/live_feed";
+    }
+</script>
+
+<script>
+   function loadPage(page) {
+    $('#page-content').load(page + ' .content', function(response, status, xhr) {
+        if (status == 'error') {
+            $('#page-content').html('<p>Error loading page.</p>');
+        }
+    });
+    return false; // Prevent default link behavior
+}
+
+
+</script>
+
+
+</body>
+</html>

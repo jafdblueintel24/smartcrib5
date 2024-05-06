@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Baby Parent Information</title>
+    <!-- Your CSS links here -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style1.css') }}">
+
+    <style>
+        .page-content {
+            margin: 0 auto;
+            max-width: 1500px; /* Adjust width as needed */
+            padding: 20px;
+            text-align: left; /* Align text to the left within page-content */
+            display: grid;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .column {
+            margin-bottom: 20px;
+            display: flex;
+            background-color: rgba(0,0,0,0.5);
+            color: #ede9e8;
+            padding: 1rem 1rem;
+            border-radius: 20px;
+            max-width: 80rem;
+            margin-right: 5rem;
+            margin-top: 2rem;
+            margin-left: 4rem;
+        }
+
+        .medical-info {
+            margin-bottom: 20px; /* Add space between each medical information section */
+        }
+
+        .parent-info{ 
+
+            font-size: 20px;
+        }
+
+        /* Adjust the margin-right for the first column */
+      .column:first-child {
+             margin-right: 2rem; /* Adjust as needed */
+        }
+        
+
+        
+    </style>
+</head>
+<body>
+    <!-- Background image from index.html -->
+    <div class="background">
+        <h1 class="title">Baby Parent Information</h1>
+        <!-- Links for different information pages -->
+        <div class="navigation">
+            <ul>
+                <li><a href="/baby_info">Baby Information</a></li>
+                <li><a href="/parent_info">Parent Information</a></li>
+                <li><a href="/baby_medical_info">Baby Medical Information</a></li>
+                <li><a href="/user_manual">User Manual</a></li>
+                <li><a href="/">Home Page</a></li>
+            </ul>
+        </div>
+        
+        <!-- Background image -->
+        <div class="image-banner">
+            <img src="{{ url_for('static', filename='Dashboard_background.png') }}" alt="My Background" class="BG"/>
+        </div>
+        
+        <!-- Centered content -->
+        <div class="page-content">
+            <!-- First column -->
+            <div class="column">
+                <!-- Parent Information -->
+                <div class="medical-info">
+                    <h2 class="parent-info">Parent 1:</h2>
+                    <p class="parent-info">Name: [Parent 1's Name]</p>
+                    <p class="parent-info">Relationship to Baby: [Father/Mother/Guardian]</p>
+                    <p class="parent-info">Contact Number: [Phone Number]</p>
+                    <p class="parent-info">Email Address: [Email Address]</p>
+                </div>
+
+                <!-- Doctor's Contact Information -->
+                <div class="medical-info">
+                    <h2 class="parent-info">Doctor's Contact Information:</h2>
+                    <p class="parent-info">Pediatrician: Dr. [Pediatrician's Name], [Phone Number], [Email Address]</p>
+                    <p class="parent-info">Emergency Contact: [Hospital Name], [Phone Number]</p>
+                </div>
+            </div>
+
+            <!-- Second column -->
+            <div class="column">
+                <!-- Emergency Contacts -->
+                <div class="medical-info">
+                    <div>
+                        <h3 class="parent-info">Emergency Contact 1:</h3>
+                        <p class="parent-info">Name: [Emergency Contact 1's Name]</p>
+                        <p class="parent-info">Relationship: [Relationship to Baby]</p>
+                        <p class="parent-info">Contact Number: [Phone Number]</p>
+                    </div>
+                    <div>
+                        <h3 class="parent-info">Emergency Contact 2:</h3>
+                        <p class="parent-info">Name: [Emergency Contact 2's Name]</p>
+                        <p class="parent-info">Relationship: [Relationship to Baby]</p>
+                        <p class="parent-info">Contact Number: [Phone Number]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Your additional HTML content here -->
+</body>
+</html>
