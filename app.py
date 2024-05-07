@@ -132,11 +132,11 @@ def listen():
         return "Could not request results from Google Speech Recognition service; {0}".format(e)
 
 # Function to toggle the relay state
-def toggle_relay():
+def toggle_relay(initial_state=False):
     current_state = GPIO.input(RELAY_PIN)
     GPIO.output(RELAY_PIN, not current_state)
 
-
+toggle_relay(False)
 
 @app.route('/toggle', methods=['POST'])
 def toggle():

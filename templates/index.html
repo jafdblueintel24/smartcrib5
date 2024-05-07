@@ -99,6 +99,7 @@
             transition: 0.8s;
             position: relative;
             overflow: hidden;
+            border-radius: 3px;
         }
         .bttnfan {
             color: black;
@@ -294,11 +295,20 @@
     
     <form class="fan" id="toggle-form" action="/toggle" method="post">
         <h1>Fan Control</h1>
-        <button class="bttn bttnfan" id="toggle-button" type="button">Toggle Fan</button>
+        <button class="bttn bttnfan" id="start-button" type="button">On</button>
+        <button class="bttn bttnfan" id="stop-button" type="button">Off</button>
     </form>
-
+    
     <script>
-        document.getElementById("toggle-button").addEventListener("click", function() {
+        document.getElementById("start-button").addEventListener("click", function() {
+            toggleFan("start");
+        });
+    
+        document.getElementById("stop-button").addEventListener("click", function() {
+            toggleFan("stop");
+        });
+    
+        function toggleFan(action) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/toggle", true);
             xhr.onreadystatechange = function() {
@@ -310,9 +320,11 @@
                     }
                 }
             };
-            xhr.send();
-        });
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify({ action: action }));
+        }
     </script>
+    
 
     
 
