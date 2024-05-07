@@ -245,7 +245,7 @@ def turn_off():
     pixels.fill((0, 0, 0))
 
 
-
+@app.route('/sensor_data')
 # Route to handle sensor data
 def sensor_data():
     try:
