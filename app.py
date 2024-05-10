@@ -8,6 +8,10 @@ import pygame
 import os
 import RPi.GPIO as GPIO
 
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.date import DateTrigger
+from datetime import datetime
+
 
 
 import picamera2 #camera module for RPi camera
@@ -31,6 +35,10 @@ from threading import Thread
 
 app = Flask(__name__, static_folder='static')
 api = Api(app)
+
+scheduler = BackgroundScheduler()
+scheduler.start()
+
 
 # Initialize SpeechRecognition
 r = sr.Recognizer()
@@ -67,7 +75,7 @@ def genFrames():
 		camera.start_encoder(encoder) 
 		camera.start() 
 		output1.start() 
-		time.sleep(5) 
+		time.sleep(1) 
 		output1.stop() 
 		print('done')
 		while True:
@@ -108,7 +116,7 @@ sensor = adafruit_dht.DHT11(board.D18)
 
 
 # Initialize NeoPixel strip with GPIO Data Pin
-pixels = neopixel.NeoPixel(board.D10, 55, brightness=1)
+pixels = neopixel.NeoPixel(board.D10, 90, brightness=1)
 
 
 
