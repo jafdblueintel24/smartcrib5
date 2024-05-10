@@ -18,7 +18,9 @@
             color: #5c5c5c;
             font-size: 40px;
         }
-
+        .scheduler {
+            margin-left: 5rem; 
+        }
         .image-banner{
             width: 100%;
             height: 100%;
@@ -274,7 +276,24 @@
         <div class="image-banner">
             <img src = "{{url_for('static', filename='Dashboard_background.png')}}" alt="My Background" class="BG"/>
         </div>
+
+        <div class="scheduler">
+           
+        <form id="schedule-form" method="post" action="/schedule">
+            <label for="schedule-time">Schedule Time:</label>
+            <input type="datetime-local" id="schedule-time" name="schedule_time">
+            <button type="submit">Schedule</button>
+        </form>
+          
+        <!-- Alert box for displaying success message -->
+        <div id="alert-box" style="display: none;">
+            <p id="alert-message"></p>
+        </div>
+
+      </div>
     <div class="banner">
+        
+        
     
         <div class="soundSensor" >
             <h1>Sound Sensor</h1>
@@ -354,6 +373,67 @@
     </div>
     </div>
     </div>
+
+
+    <script>
+
+document.getElementById('schedule-form').addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent default form submission
+    var formData = new FormData(this);  // Get form data
+    fetch('/schedule', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Task scheduled successfully');
+        } else {
+            console.error('Error scheduling task');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+
+    </script>
+
+
+<script>
+    $(document).ready(function() {
+            // Function to show alert box with message
+            function showAlert(message) {
+                $('#alert-message').text(message);
+                $('#alert-box').show();
+                setTimeout(function() {
+                    $('#alert-box').hide();
+                }, 3000);  // Hide the alert box after 3 seconds
+            }
+
+            // Event listener for form submission
+            $('#schedule-form').submit(function(event) {
+                event.preventDefault();  // Prevent default form submission
+                var formData = new FormData(this);  // Get form data
+                fetch('/schedule', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Task scheduled successfully');
+                        // Get the scheduled time set by the user
+                        var scheduledTime = new Date($('#schedule-time').val()).toLocaleString();
+                        showAlert('Schedule has been set to ' + scheduledTime);
+                    } else {
+                        console.error('Error scheduling task');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+
+
+    
     <script>
 
 function playMusic() {

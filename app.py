@@ -124,6 +124,16 @@ pixels = neopixel.NeoPixel(board.D10, 90, brightness=1)
 def index():
     return render_template('index.html', music_files=music_files)
 
+@app.route('/schedule', methods=['POST'])
+def schedule_task():
+    schedule_time = request.form['schedule_time']  # Get the scheduled time from the request
+    # Convert the schedule time to a datetime object
+    schedule_datetime = datetime.strptime(schedule_time, '%Y-%m-%dT%H:%M')
+    # Schedule the task using APScheduler
+    scheduler.add_job(activate_lights_and_music, trigger=DateTrigger(run_date=schedule_datetime))
+    return 'Task scheduled successfully'
+
+
 @app.route('/listen')
 def listen():
     with mic as source:
@@ -156,6 +166,13 @@ def auto_toggle_fan():
     toggle_relay()  # Turn on the fan
     time.sleep(30)  # Wait for 30 seconds
     toggle_relay()  # Turn off the fan
+
+
+def activate_lights_and_music():
+    # Code to activate LED lights in white color
+    pixels.fill((255, 255, 255))
+    # Code to activate music player
+    play_current_music()
     
 
     # Route for Baby Information page
