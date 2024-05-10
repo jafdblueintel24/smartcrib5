@@ -315,6 +315,13 @@
         <h1>Fan Control</h1>
         <button class="bttn bttnfan" id="start-button" type="button">On</button>
         <button class="bttn bttnfan" id="stop-button" type="button">Off</button>
+
+        <div class="automation">
+            <h1>Automation Control</h1>
+            <label for="automation-toggle">Automation:</label>
+            <input type="checkbox" id="automation-toggle">
+        </div>
+        
     </form>
     
     <script>
@@ -373,6 +380,32 @@
     </div>
     </div>
     </div>
+
+
+
+    <script>
+
+document.getElementById("automation-toggle").addEventListener("change", function() {
+    toggleAutomation(this.checked);
+});
+
+function toggleAutomation(enabled) {
+    fetch('/toggle_automation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ enabled: enabled })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Automation enabled:', data.automation_enabled);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+    </script>
 
 
     <script>
@@ -461,6 +494,54 @@ function playMusic() {
             });
         }
     </script>
+
+    <script>
+// Function to fetch temperature data and control the fan
+function fetchTemperatureAndControlFan() {
+    fetch('/sensor_data')
+    .then(response => response.json())
+    .then(data => {
+        const temperature_c = data.temperature_c;
+        console.log('Temperature:', temperature_c);
+        
+        // Check if temperature exceeds 30 degrees Celsius
+        if (temperature_c > 30) {
+            // Turn on the fan
+            toggleFan(true);
+        } else {
+            // Turn off the fan
+            toggleFan(false);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to toggle the fan
+function toggleFan(turnOn) {
+    fetch('/toggle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ turn_on: turnOn })
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Fan toggled:', turnOn ? 'On' : 'Off');
+        } else {
+            console.error('Error toggling fan');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Fetch temperature data and control fan every 30 seconds
+setInterval(fetchTemperatureAndControlFan, 30000);
+
+    </script>
+
+
+
     <script>
         $(document).ready(function() {
             function updateSensorData() {

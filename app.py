@@ -39,6 +39,9 @@ api = Api(app)
 scheduler = BackgroundScheduler()
 scheduler.start()
 
+# Variable to store the state of automation (True for ON, False for OFF)
+automation_enabled = False
+
 
 # Initialize SpeechRecognition
 r = sr.Recognizer()
@@ -124,6 +127,30 @@ pixels = neopixel.NeoPixel(board.D10, 90, brightness=1)
 def index():
     return render_template('index.html', music_files=music_files)
 
+# Route to handle toggling the automation process
+@app.route('/toggle_automation', methods=['POST'])
+def toggle_automation():
+    global automation_enabled
+    automation_enabled = not automation_enabled  # Toggle the automation state
+    
+    if automation_enabled:
+        # Schedule a job to monitor temperature and turn on the fan if needed
+        scheduler.add_job(monitor_temperature_and_control_fan, 'interval', seconds=30)
+    else:
+        # Remove any scheduled jobs if automation is turned off
+        scheduler.remove_all_jobs()
+    
+    return jsonify({'status': 'success', 'automation_enabled': automation_enabled})
+
+# Function to monitor temperature and control the fan
+def monitor_temperature_and_control_fan():
+    temperature_c = sensor.temperature
+    if temperature_c > 30:
+        toggle_relay(True)  # Turn on the fan if temperature exceeds 30 degrees Celsius
+    else:
+        toggle_relay(False)  # Turn off the fan if temperature is below 30 degrees Celsius
+
+
 @app.route('/schedule', methods=['POST'])
 def schedule_task():
     schedule_time = request.form['schedule_time']  # Get the scheduled time from the request
@@ -173,6 +200,7 @@ def activate_lights_and_music():
     pixels.fill((255, 255, 255))
     # Code to activate music player
     play_current_music()
+
     
 
     # Route for Baby Information page
@@ -270,33 +298,20 @@ def turn_off():
     pixels.fill((0, 0, 0))
 
 
-@app.route('/sensor_data')
 # Route to handle sensor data
+@app.route('/sensor_data')
 def sensor_data():
     try:
-        print("Attempting to read sensor data...")
         # Read sensor data
         temperature_c = sensor.temperature
-        temperature_f = temperature_c * (9 / 5) + 32
-        humidity = sensor.humidity  # Apply scaling factor (scaling removed)
-
-        print("Sensor data read successfully.")
-        print("Temperature (C):", temperature_c)
-        print("Temperature (F):", temperature_f)
-        print("Humidity:", humidity)
-
         
-
         # Return sensor data as JSON
-        return jsonify({
-            'temperature_c': temperature_c,
-            'temperature_f': temperature_f,
-            'humidity': humidity
-        })
+        return jsonify({'temperature_c': temperature_c})
     except RuntimeError as error:
         # Handle sensor reading errors
         print("Error reading sensor data:", error)
         return jsonify({'error': str(error)})
+
     
 
 if __name__ == "__main__":
