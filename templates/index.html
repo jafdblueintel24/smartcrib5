@@ -349,6 +349,53 @@
             xhr.send(JSON.stringify({ action: action }));
         }
     </script>
+
+    <script>
+
+        // Function to toggle the fan
+function toggleFan(turnOn) {
+    // Check if automation is enabled
+    var automationEnabled = document.getElementById('automation-toggle').checked;
+
+    // If automation is enabled, control the fan based on the turnOn parameter
+    if (automationEnabled) {
+        fetch('/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ turn_on: turnOn })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Fan toggled:', turnOn ? 'On' : 'Off');
+            } else {
+                console.error('Error toggling fan');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+        // If automation is not enabled, turn off the fan regardless of the turnOn parameter
+        fetch('/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ turn_on: false })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Fan turned off');
+            } else {
+                console.error('Error turning off fan');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+
+    </script>
     
 
     
@@ -390,20 +437,23 @@ document.getElementById("automation-toggle").addEventListener("change", function
 });
 
 function toggleAutomation(enabled) {
-    fetch('/toggle_automation', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ enabled: enabled })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Automation enabled:', data.automation_enabled);
-    })
-    .catch(error => console.error('Error:', error));
-}
-
+        fetch('/toggle_automation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ enabled: enabled })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Automation enabled:', data.automation_enabled);
+            if (!data.automation_enabled) {
+                // If automation is disabled, turn off the fan
+                toggleFan("stop");
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
     </script>
 
@@ -496,47 +546,50 @@ function playMusic() {
     </script>
 
     <script>
-// Function to fetch temperature data and control the fan
-function fetchTemperatureAndControlFan() {
-    fetch('/sensor_data')
-    .then(response => response.json())
-    .then(data => {
-        const temperature_c = data.temperature_c;
-        console.log('Temperature:', temperature_c);
-        
-        // Check if temperature exceeds 30 degrees Celsius
-        if (temperature_c > 30) {
-            // Turn on the fan
-            toggleFan(true);
-        } else {
-            // Turn off the fan
-            toggleFan(false);
-        }
-    })
-    .catch(error => console.error('Error:', error));
+// Function to fetch temperature data
+function fetchTemperatureData() {
+    return fetch('/sensor_data')
+        .then(response => response.json())
+        .then(data => {
+            return data.temperature_c; // Return the temperature value
+        })
+        .catch(error => {
+            console.error('Error fetching temperature data:', error);
+            return null; // Return null in case of an error
+        });
 }
 
-// Function to toggle the fan
-function toggleFan(turnOn) {
-    fetch('/toggle', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ turn_on: turnOn })
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Fan toggled:', turnOn ? 'On' : 'Off');
-        } else {
-            console.error('Error toggling fan');
-        }
-    })
-    .catch(error => console.error('Error:', error));
+// Function to control the fan based on temperature
+function controlFan(temperature) {
+    if (temperature > 30) {
+        // Turn on the fan
+        toggleFan(true);
+    } else {
+        // Turn off the fan
+        toggleFan(false);
+    }
+}
+
+// Function to fetch temperature data and control the fan based on automation state
+function fetchTemperatureAndControlFan() {
+    // Fetch temperature data
+    fetchTemperatureData()
+        .then(temperature => {
+            if (temperature !== null) {
+                // Check if automation is enabled
+                const automationEnabled = document.getElementById('automation-toggle').checked;
+                
+                if (automationEnabled) {
+                    // Control the fan based on temperature only if automation is enabled
+                    controlFan(temperature);
+                }
+            }
+        });
 }
 
 // Fetch temperature data and control fan every 30 seconds
 setInterval(fetchTemperatureAndControlFan, 30000);
+
 
     </script>
 
