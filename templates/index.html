@@ -281,14 +281,13 @@
             <div id="speech"></div>
         </div>
     <div class="SG">
-    <h1>Humidity Reading</h1>
-    <div id="sensorData">
-        <!-- Sensor data will be displayed here -->
-    </div>
-
-    <div class="progress">
-        <div class="progress-bar" id="humidityProgress">0%</div>
-    </div>
+        <h1>Temperature Readings</h1>
+        <div id="temperatureCelsius">Temperature (C): Loading...</div>
+        <div id="temperatureFahrenheit">Temperature (F): Loading...</div>
+        <div id="humidity">Humidity: Loading...</div>
+        <div class="progress">
+            <div class="progress-bar" id="temperatureCelsiusGauge">0°C</div>
+        </div>
 
     </div>
 
@@ -382,23 +381,24 @@ function playMusic() {
             });
         }
     </script>
-    <script>    
+    <script>
         $(document).ready(function() {
-            // Periodically fetch sensor data and update the page
-            setInterval(function() {
+            function updateSensorData() {
                 $.getJSON('/sensor_data', function(data) {
-                    $('#sensorData').html(
-                        'Temperature: ' + data.temperature_c + '°C, ' +
-                        'Temperature: ' + data.temperature_f + '°F, ' +
-                        'Humidity: ' + data.humidity + '%'
-                    );
-
-                    // Update the humidity progress bar
-                    $('#humidityProgress').css('width', data.humidity + '%').text(data.humidity + '%');
+                    // Update temperature readings
+                    $('#temperatureCelsius').text('Temperature (C): ' + data.temperature_c + '°C');
+                    $('#temperatureFahrenheit').text('Temperature (F): ' + data.temperature_f + '°F');
+                    // Update humidity reading
+                    $('#humidity').text('Humidity: ' + data.humidity + '%');
+                    // Update temperature gauge
+                    $('#temperatureCelsiusGauge').css('width', data.temperature_c + '%').text(data.temperature_c + '°C');
                 });
-            }, 5000); // Update every 5 seconds
+            }
+    
+            setInterval(updateSensorData, 5000); // Update every 5 seconds
         });
     </script>
+    
 
     <script>
         function listenForSpeech() {
