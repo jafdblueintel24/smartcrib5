@@ -9,6 +9,7 @@ adafruit-circuitpython-typing==1.10.3
 Adafruit-PlatformDetect==3.62.0
 Adafruit-PureIO==1.1.11
 aniso8601==9.0.1
+APScheduler==3.10.4
 arandr==0.1.11
 asgiref==3.6.0
 astroid==2.14.2
@@ -34,6 +35,7 @@ docutils==0.19
 Flask==3.0.3
 Flask-RESTful==0.3.10
 gpiozero==2.0
+gunicorn==22.0.0
 html5lib==1.1
 idna==3.7
 importlib-metadata==4.12.0
@@ -55,6 +57,7 @@ numpy==1.26.4
 oauthlib==3.2.2
 olefile==0.46
 packages==0.1.1
+packaging==24.0
 parso==0.8.3
 pexpect==4.8.0
 pgzero==1.2
@@ -111,6 +114,7 @@ six==1.16.0
 smbus2==0.4.2
 soundfile==0.12.1
 soupsieve==2.3.2
+SpeechRecognition==3.10.4
 spidev==3.5
 ssh-import-id==5.10
 sysv-ipc==1.1.0
@@ -254,6 +258,7 @@ types-xmltodict==0.13
 types-xxhash==3.0
 types-zxcvbn==4.4
 typing_extensions==4.11.0
+tzlocal==5.2
 urllib3==2.2.1
 v4l2-python3==0.3.4
 webencodings==0.5.1
