@@ -264,11 +264,12 @@
         <!-- Links for different information pages -->
         <div class="navigation">
             <ul>
+                <li><a href="/">Home Page</a></li>
                 <li><a href="/baby_info">Baby Information</a></li>
                 <li><a href="/parent_info">Parent Information</a></li>
                 <li><a href="/baby_medical_info">Baby Medical Information</a></li>
                 <li><a href="/user_manual">User Manual</a></li>
-                <li><a href="/">Home Page</a></li>
+                
             </ul>
             
         </div>
@@ -302,7 +303,7 @@
     <div class="SG">
         <h1>Temperature Readings</h1>
         <div id="temperatureCelsius">Temperature (C): Loading...</div>
-        <div id="temperatureFahrenheit">Temperature (F): Loading...</div>
+        
         <div id="humidity">Humidity: Loading...</div>
         <div class="progress">
             <div class="progress-bar" id="temperatureCelsiusGauge">0°C</div>
@@ -349,6 +350,57 @@
             xhr.send(JSON.stringify({ action: action }));
         }
     </script>
+
+<script>
+
+document.getElementById("automation-toggle").addEventListener("change", function() {
+    toggleAutomation(this.checked);
+});
+
+function toggleAutomation(enabled) {
+    fetch('/toggle_automation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ enabled: enabled })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Automation enabled:', data.automation_enabled);
+        if (data.automation_enabled) {
+            // If automation is enabled, start monitoring temperature for fan control
+            monitorTemperatureForFanControl();
+        } else {
+            // If automation is disabled, stop monitoring temperature for fan control
+            clearInterval(temperatureControlInterval);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to continuously monitor temperature and control fan based on automation state
+function monitorTemperatureForFanControl() {
+    temperatureControlInterval = setInterval(function() {
+        fetch('/sensor_data')
+            .then(response => response.json())
+            .then(data => {
+                // Check if temperature is greater than 25 degrees Celsius
+                if (data.temperature_c > 27) {
+                    // Turn on the fan
+                    toggleFan(true);
+                } else {
+                    // Turn off the fan
+                    toggleFan(false);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }, 5000); // Check temperature every 5 seconds
+}
+
+</script>
+
+
 
     <script>
 
@@ -570,25 +622,7 @@ function controlFan(temperature) {
     }
 }
 
-// Function to fetch temperature data and control the fan based on automation state
-function fetchTemperatureAndControlFan() {
-    // Fetch temperature data
-    fetchTemperatureData()
-        .then(temperature => {
-            if (temperature !== null) {
-                // Check if automation is enabled
-                const automationEnabled = document.getElementById('automation-toggle').checked;
-                
-                if (automationEnabled) {
-                    // Control the fan based on temperature only if automation is enabled
-                    controlFan(temperature);
-                }
-            }
-        });
-}
 
-// Fetch temperature data and control fan every 30 seconds
-setInterval(fetchTemperatureAndControlFan, 30000);
 
 
     </script>

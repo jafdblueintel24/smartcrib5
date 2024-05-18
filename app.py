@@ -36,6 +36,12 @@ from threading import Thread
 app = Flask(__name__, static_folder='static')
 api = Api(app)
 
+
+# Variable to store the last detected temperature and humidity values
+last_temperature_c = None
+last_humidity = None
+
+
 scheduler = BackgroundScheduler()
 scheduler.start()
 
@@ -131,7 +137,7 @@ def index():
 @app.route('/toggle_automation', methods=['POST'])
 def toggle_automation():
     global automation_enabled
-    automation_enabled = not automation_enabled  # Toggle the automation state
+    automation_enabled = not automation_enabled # Toggle the automation state
     
     if automation_enabled:
         # Schedule a job to monitor temperature and turn on the fan if needed
@@ -142,13 +148,31 @@ def toggle_automation():
     
     return jsonify({'status': 'success', 'automation_enabled': automation_enabled})
 
+
 # Function to monitor temperature and control the fan
 def monitor_temperature_and_control_fan():
-    temperature_c = sensor.temperature
-    if temperature_c > 30:
-        toggle_relay(True)  # Turn on the fan if temperature exceeds 30 degrees Celsius
-    else:
-        toggle_relay(False)  # Turn off the fan if temperature is below 30 degrees Celsius
+    global last_temperature_c
+
+    try:
+        # Read temperature data from the sensor
+        temperature_c = sensor.temperature
+
+        # Update last detected temperature if a valid reading is obtained
+        if temperature_c is not None:
+            last_temperature_c = temperature_c
+
+        # Check if automation is enabled and the temperature is below 25 degrees Celsius
+        if automation_enabled and last_temperature_c is not None and last_temperature_c < 25:
+            # Turn off the fan
+            toggle_relay(False)
+
+    except RuntimeError as error:
+        # Handle sensor reading errors
+        print("Error reading sensor data:", error)
+
+    # If the temperature reading is None, keep the last detected temperature
+    if temperature_c is None and last_temperature_c is not None:
+        temperature_c = last_temperature_c
 
 
 @app.route('/schedule', methods=['POST'])
@@ -301,16 +325,26 @@ def turn_off():
 # Route to handle sensor data
 @app.route('/sensor_data')
 def sensor_data():
+    global last_temperature_c, last_humidity
+
     try:
         # Read sensor data
         temperature_c = sensor.temperature
-        
+        humidity = sensor.humidity
+
+        # Update last detected values if sensor readings are valid
+        if temperature_c is not None:
+            last_temperature_c = temperature_c
+        if humidity is not None:
+            last_humidity = humidity
+
         # Return sensor data as JSON
-        return jsonify({'temperature_c': temperature_c})
+        return jsonify({'temperature_c': last_temperature_c, 'humidity': last_humidity})
+
     except RuntimeError as error:
-        # Handle sensor reading errors
+        # Handle sensor reading errors by returning the last detected values
         print("Error reading sensor data:", error)
-        return jsonify({'error': str(error)})
+        return jsonify({'temperature_c': last_temperature_c, 'humidity': last_humidity})
 
     
 
